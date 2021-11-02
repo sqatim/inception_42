@@ -83,6 +83,7 @@ services:
     env_file: .env
     ports:
       - "21:21"
+      - "20000:20000"
     volumes:
       - /home/sqatim/data/wordpress:/home/sqatim/wordpress
     networks:
