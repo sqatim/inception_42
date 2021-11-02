@@ -4,7 +4,9 @@ RUN apk add openrc
 RUN apk add mariadb mariadb-common mariadb-client
 RUN openrc
 RUN touch /run/openrc/softlevel
-RUN mkdir ~/tools
-COPY ./tools/script.sh ./~/tools/
+RUN mkdir /home/tools
+RUN mkdir /home/conf
+COPY ./tools/script.sh  /home/tools/
+COPY ./conf/wordpress.sql  /home/conf/
 EXPOSE 3306
-CMD /bin/sh /~/tools/script.sh
+CMD /bin/sh  /home/tools/script.sh

@@ -2,16 +2,20 @@ version: '3'
 
 services:
   mariadb:
+    build: ./requirements/mariadb
     image: mariadb
+    env_file: .env
     ports:
       - "3306:3306"
     volumes:
-      - ./requirements/volumes/mariadb:/var/lib/mysql
+      # - ./requirements/volumes/mariadb:/var/lib/mysql
+      - /home/sqatim/data/mariadb:/var/lib/mysql
     networks:
       - app-network
     restart: always
 
   wordpress:
+    build: ./requirements/wordpress
     depends_on:
       - mariadb
     image: wordpress
@@ -21,23 +25,70 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - ./requirements/volumes/wordpress:/www/wordpress
+      - /home/sqatim/data/wordpress:/www/wordpress
     networks:
       - app-network
     restart: always
 
   nginx:
+    build: ./requirements/nginx
     depends_on:
       - wordpress
     image: nginx
     container_name: nginx_container
     ports:
-      - "5050:443"
+      - "443:443"
     networks:
       - app-network
     volumes:
-      - ./requirements/volumes/wordpress:/www/wordpress
+      - /home/sqatim/data/wordpress:/www/wordpress
+      - /home/sqatim/data/webSite:/www/webSite
     restart: always
+
+  redis:
+    build: ./requirements/bonus/redis
+    depends_on:
+      - wordpress
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - /home/sqatim/data/wordpress:/www/wordpress
+    networks:
+      - app-network
+    restart: always
+    
+  adminer:
+    build: ./requirements/bonus/adminer
+    image: adminer
+    ports:
+      - "6060:6060"
+    networks:
+      - app-network
+    restart: always
+
+  grafana:
+    build: ./requirements/bonus/grafana
+    image: grafana
+    ports:
+      - "3000:3000"
+      - "8086:8086"
+    networks:
+      - app-network
+    restart: always
+
+  ftp:
+    build: ./requirements/bonus/ftp
+    image: ftp
+    env_file: .env
+    ports:
+      - "21:21"
+    volumes:
+      - /home/sqatim/data/wordpress:/home/sqatim/wordpress
+    networks:
+      - app-network
+    restart: always
+
 networks:
   app-network:
     driver: bridge
