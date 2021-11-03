@@ -12,8 +12,6 @@ COPY ./tools/script.sh /home/
 RUN openrc
 RUN touch /run/openrc/softlevel
 COPY ./conf/sample.yaml /grafana/conf/provisioning/datasources
-# COPY srcs/grafana.db /grafana/data/
-# COPY srcs/sample.yaml /grafana/conf/provisioning/datasources
 WORKDIR /grafana/
 EXPOSE 3000
 CMD /bin/sh /home/script.sh

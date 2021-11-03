@@ -8,8 +8,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      # - ./requirements/volumes/mariadb:/var/lib/mysql
-      - /home/sqatim/data/mariadb:/var/lib/mysql
+      - db-data:/var/lib/mysql
     networks:
       - app-network
     restart: always
@@ -25,7 +24,7 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - /home/sqatim/data/wordpress:/www/wordpress
+      - wp-data:/www/wordpress
     networks:
       - app-network
     restart: always
@@ -41,8 +40,7 @@ services:
     networks:
       - app-network
     volumes:
-      - /home/sqatim/data/wordpress:/www/wordpress
-      - /home/sqatim/data/webSite:/www/webSite
+      - wp-data:/www/wordpress
     restart: always
 
   redis:
@@ -53,7 +51,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - /home/sqatim/data/wordpress:/www/wordpress
+      - wp-data:/www/wordpress
     networks:
       - app-network
     restart: always
@@ -85,10 +83,25 @@ services:
       - "21:21"
       - "20000:20000"
     volumes:
-      - /home/sqatim/data/wordpress:/home/sqatim/wordpress
+      - wp-data:/home/sqatim/wordpress
     networks:
       - app-network
     restart: always
+
+volumes:
+  wp-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: 'bind' #option
+      device: /home/sqatim/data/wordpress
+  db-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: 'bind' #option
+      device: /home/sqatim/data/mariadb
+    
 
 networks:
   app-network:

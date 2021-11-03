@@ -16,7 +16,6 @@ RUN mkdir /www/wordpress
 RUN chmod 777 /www/wordpress
 RUN wget http://wordpress.org/latest.tar.gz && \
     tar -xzvf latest.tar.gz && \
-    # mv wordpress /www/wordpress && \
     rm latest.tar.gz && \
     rm wordpress/wp-config-sample.php && \
     mv /wp-config.php wordpress/
